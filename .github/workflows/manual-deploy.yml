@@ -1,0 +1,97 @@
+name: Manual Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '选择部署环境'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      version:
+        description: '版本号或Git标签（可选）'
+        required: false
+        type: string
+      skip_tests:
+        description: '跳过测试'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  manual-deploy:
+    runs-on: self-hosted
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.version || github.ref }}
+      
+      - name: 显示部署信息
+        run: |
+          Write-Host "========== 部署信息 ==========" -ForegroundColor Cyan
+          Write-Host "环境: ${{ github.event.inputs.environment }}" -ForegroundColor Yellow
+          Write-Host "版本: ${{ github.event.inputs.version || 'latest' }}" -ForegroundColor Yellow
+          Write-Host "分支: ${{ github.ref_name }}" -ForegroundColor Yellow
+          Write-Host "提交: ${{ github.sha }}" -ForegroundColor Yellow
+          Write-Host "操作者: ${{ github.actor }}" -ForegroundColor Yellow
+        shell: powershell
+      
+      - name: 安装依赖
+        run: npm ci
+        shell: powershell
+      
+      - name: 运行测试
+        if: ${{ github.event.inputs.skip_tests != 'true' }}
+        run: npm test
+        shell: powershell
+      
+      - name: 构建项目
+        run: npm run build
+        shell: powershell
+      
+      - name: 部署到IIS
+        shell: powershell
+        run: |
+          $env = "${{ github.event.inputs.environment }}"
+          
+          switch ($env) {
+            "development" {
+              $siteName = "${{ vars.DEV_SITE_NAME }}"
+              $sitePath = "${{ vars.DEV_SITE_PATH }}"
+            }
+            "staging" {
+              $siteName = "${{ vars.STAGING_SITE_NAME }}"
+              $sitePath = "${{ vars.STAGING_SITE_PATH }}"
+            }
+            "production" {
+              $siteName = "${{ vars.PROD_SITE_NAME }}"
+              $sitePath = "${{ vars.PROD_SITE_PATH }}"
+            }
+          }
+          
+          .\scripts\deploy-to-iis.ps1 `
+            -SiteName $siteName `
+            -SitePath $sitePath `
+            -SourcePath ".\dist" `
+            -EnableBackup
+      
+      - name: 部署成功通知
+        if: success()
+        run: |
+          Write-Host "========== 部署成功 ==========" -ForegroundColor Green
+          Write-Host "环境: ${{ github.event.inputs.environment }}" -ForegroundColor Cyan
+          Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Cyan
+        shell: powershell
+      
+      - name: 部署失败通知
+        if: failure()
+        run: |
+          Write-Host "========== 部署失败 ==========" -ForegroundColor Red
+          Write-Host "请检查日志并联系管理员" -ForegroundColor Yellow
+        shell: powershell

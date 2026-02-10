@@ -1,0 +1,169 @@
+name: Deploy to IIS
+
+on:
+  push:
+    branches:
+      - main
+      - production
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '部署环境'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: 安装依赖
+        run: npm ci
+      
+      - name: 构建项目
+        run: npm run build
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: dist/
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    
+    steps:
+      - name: 下载构建产物
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: ./build
+      
+      - name: 停止IIS站点
+        shell: powershell
+        run: |
+          Import-Module WebAdministration
+          $siteName = "${{ secrets.IIS_SITE_NAME }}"
+          $appPool = (Get-Website -Name $siteName).applicationPool
+          
+          Write-Host "停止站点: $siteName"
+          Stop-Website -Name $siteName
+          
+          Write-Host "停止应用程序池: $appPool"
+          Stop-WebAppPool -Name $appPool
+          
+          Start-Sleep -Seconds 5
+      
+      - name: 备份当前版本
+        shell: powershell
+        run: |
+          $sitePath = "${{ secrets.IIS_SITE_PATH }}"
+          $backupPath = "${{ secrets.BACKUP_PATH }}\Backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
+          
+          Write-Host "备份到: $backupPath"
+          New-Item -ItemType Directory -Path $backupPath -Force
+          Copy-Item -Path "$sitePath\*" -Destination $backupPath -Recurse -Force
+      
+      - name: 部署新版本
+        shell: powershell
+        run: |
+          $sitePath = "${{ secrets.IIS_SITE_PATH }}"
+          
+          # 保留web.config
+          $webConfig = Join-Path $sitePath "web.config"
+          $tempConfig = "$env:TEMP\web.config.temp"
+          if (Test-Path $webConfig) {
+            Copy-Item $webConfig $tempConfig -Force
+          }
+          
+          # 清理旧文件
+          Get-ChildItem -Path $sitePath | Remove-Item -Recurse -Force
+          
+          # 复制新文件
+          Copy-Item -Path ".\build\*" -Destination $sitePath -Recurse -Force
+          
+          # 恢复web.config
+          if (Test-Path $tempConfig) {
+            Copy-Item $tempConfig $webConfig -Force
+            Remove-Item $tempConfig -Force
+          }
+          
+          Write-Host "部署完成"
+      
+      - name: 启动IIS站点
+        shell: powershell
+        run: |
+          Import-Module WebAdministration
+          $siteName = "${{ secrets.IIS_SITE_NAME }}"
+          $appPool = (Get-Website -Name $siteName).applicationPool
+          
+          Write-Host "启动站点: $siteName"
+          Start-Website -Name $siteName
+          
+          Write-Host "启动应用程序池: $appPool"
+          Start-WebAppPool -Name $appPool
+          
+          Start-Sleep -Seconds 5
+      
+      - name: 健康检查
+        shell: powershell
+        run: |
+          $url = "${{ secrets.HEALTH_CHECK_URL }}"
+          $maxRetries = 5
+          $retryCount = 0
+          
+          while ($retryCount -lt $maxRetries) {
+            try {
+              $response = Invoke-WebRequest -Uri $url -TimeoutSec 10
+              if ($response.StatusCode -eq 200) {
+                Write-Host "健康检查通过: $($response.StatusCode)"
+                exit 0
+              }
+            } catch {
+              $retryCount++
+              Write-Host "健康检查失败，重试 $retryCount/$maxRetries"
+              Start-Sleep -Seconds 10
+            }
+          }
+          
+          Write-Host "健康检查失败"
+          exit 1
+      
+      - name: 部署失败回滚
+        if: failure()
+        shell: powershell
+        run: |
+          Write-Host "部署失败，尝试回滚..."
+          $sitePath = "${{ secrets.IIS_SITE_PATH }}"
+          $backupPath = "${{ secrets.BACKUP_PATH }}"
+          
+          # 获取最新备份
+          $latestBackup = Get-ChildItem -Path $backupPath -Directory | 
+                          Sort-Object CreationTime -Descending | 
+                          Select-Object -First 1
+          
+          if ($latestBackup) {
+            Write-Host "从备份恢复: $($latestBackup.FullName)"
+            Get-ChildItem -Path $sitePath | Remove-Item -Recurse -Force
+            Copy-Item -Path "$($latestBackup.FullName)\*" -Destination $sitePath -Recurse -Force
+            
+            # 重启服务
+            Import-Module WebAdministration
+            $siteName = "${{ secrets.IIS_SITE_NAME }}"
+            $appPool = (Get-Website -Name $siteName).applicationPool
+            Start-Website -Name $siteName
+            Start-WebAppPool -Name $appPool
+          }

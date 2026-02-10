@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户中心</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .user-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .value {
+            color: #333;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-logout {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-right: 10px;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .welcome {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>用户中心</h1>
+            <button class="btn btn-logout" onclick="logout()">退出登录</button>
+        </div>
+
+        <div class="welcome" id="welcome"></div>
+
+        <div class="user-info">
+            <h2 style="margin-bottom: 15px; color: #333;">用户信息</h2>
+            <div class="info-row">
+                <span class="label">用户名：</span>
+                <span class="value" id="username"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">角色：</span>
+                <span class="value" id="role"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">登录时间：</span>
+                <span class="value" id="loginTime"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">会话状态：</span>
+                <span class="value" style="color: #28a745;">在线</span>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="alert('功能开发中...')">修改密码</button>
+            <button class="btn btn-primary" onclick="alert('功能开发中...')">个人设置</button>
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        function checkLogin() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!currentUser) {
+                alert('请先登录');
+                window.location.href = 'index.html';
+                return null;
+            }
+            return JSON.parse(currentUser);
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // 格式化时间
+        function formatTime(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        // 页面加载时显示用户信息
+        window.addEventListener('load', function () {
+            const user = checkLogin();
+            if (user) {
+                document.getElementById('welcome').textContent = `欢迎回来，${user.username}！`;
+                document.getElementById('username').textContent = user.username;
+                document.getElementById('role').textContent = user.role;
+                document.getElementById('loginTime').textContent = formatTime(user.loginTime);
+            }
+        });
+    </script>
+</body>
+
+</html>

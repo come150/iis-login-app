@@ -1,0 +1,112 @@
+name: Multi-Environment Deploy
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests
+        run: npm test
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-build
+          path: dist/
+
+  deploy-dev:
+    if: github.ref == 'refs/heads/develop'
+    needs: build
+    runs-on: [self-hosted, windows, dev]
+    environment: development
+    
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: ./build
+      
+      - name: Deploy to Dev
+        shell: powershell
+        run: |
+          .\scripts\deploy-to-iis.ps1 `
+            -SiteName "${{ vars.DEV_SITE_NAME }}" `
+            -SitePath "${{ vars.DEV_SITE_PATH }}" `
+            -SourcePath ".\build"
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/staging'
+    needs: build
+    runs-on: [self-hosted, windows, staging]
+    environment: staging
+    
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: ./build
+      
+      - name: Deploy to Staging
+        shell: powershell
+        run: |
+          .\scripts\deploy-to-iis.ps1 `
+            -SiteName "${{ vars.STAGING_SITE_NAME }}" `
+            -SitePath "${{ vars.STAGING_SITE_PATH }}" `
+            -SourcePath ".\build"
+
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: [self-hosted, windows, production]
+    environment: 
+      name: production
+      url: https://your-production-url.com
+    
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: ./build
+      
+      - name: Deploy to Production
+        shell: powershell
+        run: |
+          .\scripts\deploy-to-iis.ps1 `
+            -SiteName "${{ vars.PROD_SITE_NAME }}" `
+            -SitePath "${{ vars.PROD_SITE_PATH }}" `
+            -SourcePath ".\build" `
+            -EnableBackup
+      
+      - name: Smoke Test
+        shell: powershell
+        run: |
+          $response = Invoke-WebRequest -Uri "${{ vars.PROD_URL }}" -TimeoutSec 30
+          if ($response.StatusCode -ne 200) {
+            throw "Smoke test failed"
+          }
