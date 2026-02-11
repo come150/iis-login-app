@@ -43,7 +43,7 @@ jobs:
         shell: powershell
       
       - name: 构建项目
-        run: npm run build
+        run: node build.js
         shell: powershell
       
       - name: 部署到IIS
