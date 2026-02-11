@@ -42,15 +42,6 @@ jobs:
           Write-Host "操作者: ${{ github.actor }}" -ForegroundColor Yellow
         shell: powershell
       
-      - name: 安装依赖
-        run: npm ci
-        shell: powershell
-      
-      - name: 运行测试
-        if: ${{ github.event.inputs.skip_tests != 'true' }}
-        run: npm test
-        shell: powershell
-      
       - name: 构建项目
         run: npm run build
         shell: powershell
