@@ -46,7 +46,7 @@ jobs:
       - name: 部署到IIS
         shell: powershell
         run: |
-          E:\github\GitHub` Self-hosted` Runner\scripts\deploy-to-iis.ps1 `
+          & "E:\github\GitHub Self-hosted Runner\scripts\deploy-to-iis.ps1" `
             -SiteName "${{ secrets.IIS_SITE_NAME }}" `
             -SitePath "${{ secrets.IIS_SITE_PATH }}" `
             -SourcePath "E:\github\GitHub Self-hosted Runner\dist" `
