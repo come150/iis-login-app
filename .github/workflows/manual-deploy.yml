@@ -24,39 +24,32 @@ on:
 jobs:
   manual-deploy:
     runs-on: self-hosted
-    environment: ${{ github.event.inputs.environment }}
     
     steps:
-      - name: 检出代码
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.version || github.ref }}
-      
       - name: 显示部署信息
         run: |
-          Write-Host "========== 部署信息 ==========" -ForegroundColor Cyan
-          Write-Host "环境: ${{ github.event.inputs.environment }}" -ForegroundColor Yellow
-          Write-Host "版本: ${{ github.event.inputs.version || 'latest' }}" -ForegroundColor Yellow
-          Write-Host "分支: ${{ github.ref_name }}" -ForegroundColor Yellow
-          Write-Host "提交: ${{ github.sha }}" -ForegroundColor Yellow
-          Write-Host "操作者: ${{ github.actor }}" -ForegroundColor Yellow
+          Write-Host "========== 开始部署 ==========" -ForegroundColor Cyan
+          Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Yellow
         shell: powershell
       
       - name: 准备部署文件
         run: |
-          # 直接复制src目录到临时dist目录
-          if (Test-Path "dist") { Remove-Item "dist" -Recurse -Force }
-          Copy-Item -Path "src" -Destination "dist" -Recurse
+          # 使用本地已有的代码（Runner工作目录）
+          $sourcePath = "E:\github\GitHub Self-hosted Runner\src"
+          $distPath = "E:\github\GitHub Self-hosted Runner\dist"
+          
+          if (Test-Path $distPath) { Remove-Item $distPath -Recurse -Force }
+          Copy-Item -Path $sourcePath -Destination $distPath -Recurse
           Write-Host "✓ 部署文件已准备" -ForegroundColor Green
         shell: powershell
       
       - name: 部署到IIS
         shell: powershell
         run: |
-          .\scripts\deploy-to-iis.ps1 `
+          E:\github\GitHub` Self-hosted` Runner\scripts\deploy-to-iis.ps1 `
             -SiteName "${{ secrets.IIS_SITE_NAME }}" `
             -SitePath "${{ secrets.IIS_SITE_PATH }}" `
-            -SourcePath ".\dist" `
+            -SourcePath "E:\github\GitHub Self-hosted Runner\dist" `
             -EnableBackup
       
       - name: 部署成功通知
