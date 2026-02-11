@@ -53,26 +53,9 @@ jobs:
       - name: 部署到IIS
         shell: powershell
         run: |
-          $env = "${{ github.event.inputs.environment }}"
-          
-          switch ($env) {
-            "development" {
-              $siteName = "${{ vars.DEV_SITE_NAME }}"
-              $sitePath = "${{ vars.DEV_SITE_PATH }}"
-            }
-            "staging" {
-              $siteName = "${{ vars.STAGING_SITE_NAME }}"
-              $sitePath = "${{ vars.STAGING_SITE_PATH }}"
-            }
-            "production" {
-              $siteName = "${{ vars.PROD_SITE_NAME }}"
-              $sitePath = "${{ vars.PROD_SITE_PATH }}"
-            }
-          }
-          
           .\scripts\deploy-to-iis.ps1 `
-            -SiteName $siteName `
-            -SitePath $sitePath `
+            -SiteName "${{ secrets.IIS_SITE_NAME }}" `
+            -SitePath "${{ secrets.IIS_SITE_PATH }}" `
             -SourcePath ".\dist" `
             -EnableBackup
       
