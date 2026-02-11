@@ -46,11 +46,49 @@ jobs:
       - name: 部署到IIS
         shell: powershell
         run: |
-          & "E:\github\GitHub Self-hosted Runner\scripts\deploy-to-iis.ps1" `
-            -SiteName "${{ secrets.IIS_SITE_NAME }}" `
-            -SitePath "${{ secrets.IIS_SITE_PATH }}" `
-            -SourcePath "E:\github\GitHub Self-hosted Runner\dist" `
-            -EnableBackup
+          Write-Host "========== 开始部署到IIS ==========" -ForegroundColor Cyan
+          
+          Import-Module WebAdministration
+          
+          $siteName = "${{ secrets.IIS_SITE_NAME }}"
+          $sitePath = "${{ secrets.IIS_SITE_PATH }}"
+          $sourcePath = "E:\github\GitHub Self-hosted Runner\dist"
+          
+          Write-Host "站点名称: $siteName" -ForegroundColor Yellow
+          Write-Host "站点路径: $sitePath" -ForegroundColor Yellow
+          Write-Host "源路径: $sourcePath" -ForegroundColor Yellow
+          
+          # 获取应用程序池
+          $site = Get-Website -Name $siteName
+          $appPoolName = $site.applicationPool
+          Write-Host "应用程序池: $appPoolName" -ForegroundColor Yellow
+          
+          # 停止服务
+          Write-Host "停止应用程序池..." -ForegroundColor Yellow
+          Stop-WebAppPool -Name $appPoolName
+          Start-Sleep -Seconds 3
+          
+          Write-Host "停止站点..." -ForegroundColor Yellow
+          Stop-Website -Name $siteName
+          Start-Sleep -Seconds 2
+          
+          # 部署文件
+          Write-Host "清理旧文件..." -ForegroundColor Yellow
+          Get-ChildItem -Path $sitePath | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+          
+          Write-Host "复制新文件..." -ForegroundColor Yellow
+          Copy-Item -Path "$sourcePath\*" -Destination $sitePath -Recurse -Force
+          
+          # 启动服务
+          Write-Host "启动站点..." -ForegroundColor Yellow
+          Start-Website -Name $siteName
+          Start-Sleep -Seconds 2
+          
+          Write-Host "启动应用程序池..." -ForegroundColor Yellow
+          Start-WebAppPool -Name $appPoolName
+          Start-Sleep -Seconds 3
+          
+          Write-Host "========== 部署完成 ==========" -ForegroundColor Green
       
       - name: 部署成功通知
         if: success()
