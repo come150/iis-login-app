@@ -42,8 +42,12 @@ jobs:
           Write-Host "操作者: ${{ github.actor }}" -ForegroundColor Yellow
         shell: powershell
       
-      - name: 构建项目
-        run: node build.js
+      - name: 准备部署文件
+        run: |
+          # 直接复制src目录到临时dist目录
+          if (Test-Path "dist") { Remove-Item "dist" -Recurse -Force }
+          Copy-Item -Path "src" -Destination "dist" -Recurse
+          Write-Host "✓ 部署文件已准备" -ForegroundColor Green
         shell: powershell
       
       - name: 部署到IIS
