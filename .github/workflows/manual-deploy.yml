@@ -26,21 +26,20 @@ jobs:
     runs-on: self-hosted
     
     steps:
-      - name: 检出代码
-        uses: actions/checkout@v4
-      
       - name: 显示部署信息
         run: |
           Write-Host "========== 开始部署 ==========" -ForegroundColor Cyan
           Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Yellow
+          Write-Host "工作目录: $(Get-Location)" -ForegroundColor Yellow
         shell: powershell
       
       - name: 构建.NET项目
         run: |
           Write-Host "开始构建Quant.Infra.Net项目..." -ForegroundColor Yellow
           
-          $projectPath = "Quant.Infra.Net\Quant.Infra.Net\Quant.Infra.Net.csproj"
-          $outputPath = "publish"
+          # 使用本地代码路径
+          $projectPath = "E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\Quant.Infra.Net.csproj"
+          $outputPath = "E:\github\GitHub Self-hosted Runner\publish"
           
           if (Test-Path $outputPath) {
             Remove-Item $outputPath -Recurse -Force
@@ -55,10 +54,11 @@ jobs:
         run: |
           Write-Host "运行邮件发送测试..." -ForegroundColor Yellow
           
-          $testProject = "Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
+          # 使用本地代码路径
+          $testProject = "E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
           
           # 运行特定的测试方法
-          dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=detailed"
+          dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=normal"
           
           Write-Host "✓ 邮件已发送" -ForegroundColor Green
         shell: powershell
