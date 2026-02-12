@@ -26,6 +26,13 @@ jobs:
     runs-on: self-hosted
     
     steps:
+      - name: 检出代码（带重试）
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+        env:
+          GIT_TRACE: 1
+      
       - name: 显示部署信息
         run: |
           Write-Host "========== 开始部署 ==========" -ForegroundColor Cyan
@@ -37,9 +44,8 @@ jobs:
         run: |
           Write-Host "开始构建Quant.Infra.Net项目..." -ForegroundColor Yellow
           
-          # 使用本地代码路径
-          $projectPath = "E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\Quant.Infra.Net.csproj"
-          $outputPath = "E:\github\GitHub Self-hosted Runner\publish"
+          $projectPath = "Quant.Infra.Net\Quant.Infra.Net\Quant.Infra.Net.csproj"
+          $outputPath = "publish"
           
           if (Test-Path $outputPath) {
             Remove-Item $outputPath -Recurse -Force
@@ -54,8 +60,7 @@ jobs:
         run: |
           Write-Host "运行邮件发送测试..." -ForegroundColor Yellow
           
-          # 使用本地代码路径
-          $testProject = "E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
+          $testProject = "Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
           
           # 运行特定的测试方法
           dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=normal"
