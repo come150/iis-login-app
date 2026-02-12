@@ -1,4 +1,4 @@
-name: Deploy Quant.Infra.Net to IIS
+name: Build and Test Quant.Infra.Net
 
 on:
   workflow_dispatch:
@@ -51,22 +51,17 @@ jobs:
           Write-Host "✓ 构建完成" -ForegroundColor Green
         shell: powershell
       
-      - name: 部署到IIS
-        shell: powershell
+      - name: 运行邮件发送测试
         run: |
-          Write-Host "========== 开始部署 ==========" -ForegroundColor Cyan
+          Write-Host "运行邮件发送测试..." -ForegroundColor Yellow
           
-          $sitePath = "${{ secrets.IIS_SITE_PATH }}"
-          $sourcePath = "publish"
+          $testProject = "Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
           
-          Write-Host "站点路径: $sitePath"
-          Write-Host "源路径: $sourcePath"
+          # 运行特定的测试方法
+          dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=detailed"
           
-          Write-Host "复制文件..." -ForegroundColor Yellow
-          Copy-Item -Path "$sourcePath\*" -Destination $sitePath -Recurse -Force
-          
-          Write-Host "========== 部署完成 ==========" -ForegroundColor Green
-          Write-Host "访问 http://localhost 查看结果"
+          Write-Host "✓ 邮件已发送" -ForegroundColor Green
+        shell: powershell
       
       - name: 部署成功通知
         if: success()
