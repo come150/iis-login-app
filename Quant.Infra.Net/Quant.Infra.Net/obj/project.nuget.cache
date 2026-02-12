@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Sd600ChFp7g=",
+  "dgSpecHash": "SNWAgufD+Tg=",
   "success": true,
-  "projectFilePath": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net\\Quant.Infra.Net.csproj",
+  "projectFilePath": "E:\\github\\GitHub Self-hosted Runner\\Quant.Infra.Net\\Quant.Infra.Net\\Quant.Infra.Net.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Y\\.nuget\\packages\\accord\\3.8.0\\accord.3.8.0.nupkg.sha512",
     "C:\\Users\\Y\\.nuget\\packages\\accord.math\\3.8.0\\accord.math.3.8.0.nupkg.sha512",

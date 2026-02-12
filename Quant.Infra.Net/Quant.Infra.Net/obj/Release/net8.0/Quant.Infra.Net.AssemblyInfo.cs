@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Quant.Infra.Net")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.2.2.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.2+24401a71241a7eabf984d1586dcd6348b24b5605")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.2+62216a90e88553db506607eadaa3663cd68e2de4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Quant.Infra.Net")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Quant.Infra.Net")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.2.2.0")]

@@ -15,3 +15,20 @@ E:\github\Quant.Infra.Net\src\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net
 E:\github\Quant.Infra.Net\src\Quant.Infra.Net\obj\Release\net8.0\refint\Quant.Infra.Net.dll
 E:\github\Quant.Infra.Net\src\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net.pdb
 E:\github\Quant.Infra.Net\src\Quant.Infra.Net\obj\Release\net8.0\ref\Quant.Infra.Net.dll
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\bin\Release\net8.0\Readme-Quant.Infra.Net..txt
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\bin\Release\net8.0\Accord.dll.config
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\bin\Release\net8.0\Quant.Infra.Net.deps.json
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\bin\Release\net8.0\Quant.Infra.Net.dll
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\bin\Release\net8.0\Quant.Infra.Net.pdb
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\bin\Release\net8.0\InterReact.dll
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net.csproj.AssemblyReference.cache
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net.GeneratedMSBuildEditorConfig.editorconfig
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net.AssemblyInfoInputs.cache
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net.AssemblyInfo.cs
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net.csproj.CoreCompileInputs.cache
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net.sourcelink.json
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\Quant.In.3FFD4AF4.Up2Date
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net.dll
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\refint\Quant.Infra.Net.dll
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\Quant.Infra.Net.pdb
+E:\github\GitHub Self-hosted Runner\Quant.Infra.Net\Quant.Infra.Net\obj\Release\net8.0\ref\Quant.Infra.Net.dll
