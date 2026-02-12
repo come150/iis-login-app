@@ -1,4 +1,4 @@
-name: Manual Deploy
+name: Deploy Quant.Infra.Net to IIS
 
 on:
   workflow_dispatch:
@@ -26,21 +26,29 @@ jobs:
     runs-on: self-hosted
     
     steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      
       - name: 显示部署信息
         run: |
           Write-Host "========== 开始部署 ==========" -ForegroundColor Cyan
           Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Yellow
         shell: powershell
       
-      - name: 准备部署文件
+      - name: 构建.NET项目
         run: |
-          # 使用本地已有的代码（Runner工作目录）
-          $sourcePath = "E:\github\GitHub Self-hosted Runner\src"
-          $distPath = "E:\github\GitHub Self-hosted Runner\dist"
+          Write-Host "开始构建Quant.Infra.Net项目..." -ForegroundColor Yellow
           
-          if (Test-Path $distPath) { Remove-Item $distPath -Recurse -Force }
-          Copy-Item -Path $sourcePath -Destination $distPath -Recurse
-          Write-Host "✓ 部署文件已准备" -ForegroundColor Green
+          $projectPath = "Quant.Infra.Net\Quant.Infra.Net\Quant.Infra.Net.csproj"
+          $outputPath = "publish"
+          
+          if (Test-Path $outputPath) {
+            Remove-Item $outputPath -Recurse -Force
+          }
+          
+          dotnet publish $projectPath -c Release -o $outputPath
+          
+          Write-Host "✓ 构建完成" -ForegroundColor Green
         shell: powershell
       
       - name: 部署到IIS
@@ -49,13 +57,12 @@ jobs:
           Write-Host "========== 开始部署 ==========" -ForegroundColor Cyan
           
           $sitePath = "${{ secrets.IIS_SITE_PATH }}"
-          $sourcePath = "E:\github\GitHub Self-hosted Runner\dist"
+          $sourcePath = "publish"
           
           Write-Host "站点路径: $sitePath"
           Write-Host "源路径: $sourcePath"
           
-          # 简单部署：直接复制文件
-          Write-Host "复制文件..."
+          Write-Host "复制文件..." -ForegroundColor Yellow
           Copy-Item -Path "$sourcePath\*" -Destination $sitePath -Recurse -Force
           
           Write-Host "========== 部署完成 ==========" -ForegroundColor Green

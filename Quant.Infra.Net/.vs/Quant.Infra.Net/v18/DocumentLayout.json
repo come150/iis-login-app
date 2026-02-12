@@ -1,0 +1,150 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\github\\Quant.Infra.Net\\src\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|e:\\github\\quant.infra.net\\src\\quant.infra.net.tests\\emailservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|solutionrelative:quant.infra.net.tests\\emailservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Y\\AppData\\Roaming\\Microsoft\\UserSecrets\\cfeaf4a0-56d5-4ab0-b87a-a9f080f983e4\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|e:\\github\\quant.infra.net\\src\\quant.infra.net.tests\\analysistests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|solutionrelative:quant.infra.net.tests\\analysistests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|e:\\github\\quant.infra.net\\src\\quant.infra.net.tests\\cryptosourcedataservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|solutionrelative:quant.infra.net.tests\\cryptosourcedataservicetests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Y\\AppData\\Roaming\\Microsoft\\UserSecrets\\8b042025-ae24-4b48-b89b-12b7001ca6e7\\secrets.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{70E19226-664D-495E-A609-AE8ECC266F26}|Quant.Infra.Net\\Quant.Infra.Net.csproj|e:\\github\\quant.infra.net\\src\\quant.infra.net\\quant.infra.net.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{70E19226-664D-495E-A609-AE8ECC266F26}|Quant.Infra.Net\\Quant.Infra.Net.csproj|solutionrelative:quant.infra.net\\quant.infra.net.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|e:\\github\\quant.infra.net\\src\\quant.infra.net.tests\\quant.infra.net.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|solutionrelative:quant.infra.net.tests\\quant.infra.net.tests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|e:\\github\\quant.infra.net\\src\\quant.infra.net.tests\\pythonnettests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51FE4E76-EBC7-4CAD-920F-9E9184C8381A}|Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj|solutionrelative:quant.infra.net.tests\\pythonnettests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "secrets.json",
+              "DocumentMoniker": "C:\\Users\\Y\\AppData\\Roaming\\Microsoft\\UserSecrets\\cfeaf4a0-56d5-4ab0-b87a-a9f080f983e4\\secrets.json",
+              "ToolTip": "C:\\Users\\Y\\AppData\\Roaming\\Microsoft\\UserSecrets\\cfeaf4a0-56d5-4ab0-b87a-a9f080f983e4\\secrets.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-06T13:12:41.191Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AnalysisTests.cs",
+              "DocumentMoniker": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\AnalysisTests.cs",
+              "RelativeDocumentMoniker": "Quant.Infra.Net.Tests\\AnalysisTests.cs",
+              "ToolTip": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\AnalysisTests.cs",
+              "RelativeToolTip": "Quant.Infra.Net.Tests\\AnalysisTests.cs",
+              "ViewState": "AgIAAJIAAAAAAAAAAADwv6EAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T09:45:00.501Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Quant.Infra.Net.csproj",
+              "DocumentMoniker": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net\\Quant.Infra.Net.csproj",
+              "RelativeDocumentMoniker": "Quant.Infra.Net\\Quant.Infra.Net.csproj",
+              "ToolTip": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net\\Quant.Infra.Net.csproj",
+              "RelativeToolTip": "Quant.Infra.Net\\Quant.Infra.Net.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADQAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-05T09:27:46.122Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "secrets.json",
+              "DocumentMoniker": "C:\\Users\\Y\\AppData\\Roaming\\Microsoft\\UserSecrets\\8b042025-ae24-4b48-b89b-12b7001ca6e7\\secrets.json",
+              "ToolTip": "C:\\Users\\Y\\AppData\\Roaming\\Microsoft\\UserSecrets\\8b042025-ae24-4b48-b89b-12b7001ca6e7\\secrets.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-05T09:28:09.49Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CryptoSourceDataServiceTests.cs",
+              "DocumentMoniker": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\CryptoSourceDataServiceTests.cs",
+              "RelativeDocumentMoniker": "Quant.Infra.Net.Tests\\CryptoSourceDataServiceTests.cs",
+              "ToolTip": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\CryptoSourceDataServiceTests.cs",
+              "RelativeToolTip": "Quant.Infra.Net.Tests\\CryptoSourceDataServiceTests.cs",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAwwBcAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T01:30:19.025Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EmailServiceTests.cs",
+              "DocumentMoniker": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\EmailServiceTests.cs",
+              "RelativeDocumentMoniker": "Quant.Infra.Net.Tests\\EmailServiceTests.cs",
+              "ToolTip": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\EmailServiceTests.cs",
+              "RelativeToolTip": "Quant.Infra.Net.Tests\\EmailServiceTests.cs",
+              "ViewState": "AgIAANUAAAAAAAAAAADgv+UAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-05T01:15:07.188Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Quant.Infra.Net.Tests.csproj",
+              "DocumentMoniker": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj",
+              "RelativeDocumentMoniker": "Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj",
+              "ToolTip": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj",
+              "RelativeToolTip": "Quant.Infra.Net.Tests\\Quant.Infra.Net.Tests.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-05T01:14:59.705Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PythonNetTests.cs",
+              "DocumentMoniker": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\PythonNetTests.cs",
+              "RelativeDocumentMoniker": "Quant.Infra.Net.Tests\\PythonNetTests.cs",
+              "ToolTip": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net.Tests\\PythonNetTests.cs",
+              "RelativeToolTip": "Quant.Infra.Net.Tests\\PythonNetTests.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAhwEAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-04T12:42:53.122Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

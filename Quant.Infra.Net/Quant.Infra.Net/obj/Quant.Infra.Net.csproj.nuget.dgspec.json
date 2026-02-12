@@ -1,0 +1,294 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net\\Quant.Infra.Net.csproj": {}
+  },
+  "projects": {
+    "E:\\github\\InterReact\\InterReact\\InterReact.csproj": {
+      "version": "0.6.0",
+      "restore": {
+        "projectUniqueName": "E:\\github\\InterReact\\InterReact\\InterReact.csproj",
+        "projectName": "InterReact",
+        "projectPath": "E:\\github\\InterReact\\InterReact\\InterReact.csproj",
+        "packagesPath": "C:\\Users\\Y\\.nuget\\packages\\",
+        "outputPath": "E:\\github\\InterReact\\InterReact\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Y\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "NodaTime": {
+              "target": "Package",
+              "version": "[3.2.0, )"
+            },
+            "RxSockets": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Stringification": {
+              "target": "Package",
+              "version": "[4.0.1, )"
+            },
+            "System.Reactive": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "pythonnet": {
+              "target": "Package",
+              "version": "[3.0.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net\\Quant.Infra.Net.csproj": {
+      "version": "1.2.2",
+      "restore": {
+        "projectUniqueName": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net\\Quant.Infra.Net.csproj",
+        "projectName": "Quant.Infra.Net",
+        "projectPath": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net\\Quant.Infra.Net.csproj",
+        "packagesPath": "C:\\Users\\Y\\.nuget\\packages\\",
+        "outputPath": "E:\\github\\Quant.Infra.Net\\src\\Quant.Infra.Net\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Y\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "E:\\github\\InterReact\\InterReact\\InterReact.csproj": {
+                "projectPath": "E:\\github\\InterReact\\InterReact\\InterReact.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Accord.Statistics": {
+              "target": "Package",
+              "version": "[3.8.0, )"
+            },
+            "Alpaca.Markets": {
+              "target": "Package",
+              "version": "[7.2.0, )"
+            },
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[12.0.0, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.0, )"
+            },
+            "Binance.Net": {
+              "target": "Package",
+              "version": "[11.9.0, )"
+            },
+            "CryptoExchange.Net": {
+              "target": "Package",
+              "version": "[9.10.0, )"
+            },
+            "CsvHelper": {
+              "target": "Package",
+              "version": "[33.0.1, )"
+            },
+            "Deedle": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "HtmlAgilityPack": {
+              "target": "Package",
+              "version": "[1.11.67, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.14.1, )"
+            },
+            "MathNet.Numerics": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "Microsoft.Data.Analysis": {
+              "target": "Package",
+              "version": "[0.21.1, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.UserSecrets": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.Extensions.Hosting.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[8.5.0, )"
+            },
+            "RestSharp": {
+              "target": "Package",
+              "version": "[112.1.0, )"
+            },
+            "ScottPlot": {
+              "target": "Package",
+              "version": "[5.0.39, )"
+            },
+            "Serilog": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[6.1.1, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Stats.NET": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "System.Linq": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "YahooFinanceApi": {
+              "target": "Package",
+              "version": "[2.3.3, )"
+            },
+            "pythonnet": {
+              "target": "Package",
+              "version": "[3.0.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
