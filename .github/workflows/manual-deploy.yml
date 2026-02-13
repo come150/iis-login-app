@@ -56,6 +56,57 @@ jobs:
           Write-Host "Username: $env:BREVO_USERNAME" -ForegroundColor Cyan
         shell: powershell
       
+      - name: 验证测试代码版本
+        run: |
+          Write-Host "========== 验证测试代码 ==========" -ForegroundColor Cyan
+          Write-Host ""
+          
+          $testFile = "Quant.Infra.Net\Quant.Infra.Net.Tests\EmailServiceTests.cs"
+          
+          Write-Host "检查测试文件是否存在:" -ForegroundColor Yellow
+          if (Test-Path $testFile) {
+            Write-Host "✓ 文件存在: $testFile" -ForegroundColor Green
+            
+            Write-Host ""
+            Write-Host "检查MVP_SendCommercial方法的Body内容:" -ForegroundColor Yellow
+            $content = Get-Content $testFile -Raw
+            
+            # 查找Body赋值
+            if ($content -match 'Body\s*=\s*@"') {
+              Write-Host "✓ 检测到完整的HTML Body内容" -ForegroundColor Green
+            } elseif ($content -match 'Body\s*=\s*"<h1>测试内容已省略') {
+              Write-Host "✗ 检测到占位符Body内容（旧版本）" -ForegroundColor Red
+              Write-Host "  这说明GitHub克隆的是旧版本代码！" -ForegroundColor Red
+            } else {
+              Write-Host "⚠ 无法确定Body内容" -ForegroundColor Yellow
+            }
+            
+            # 显示Body相关的几行
+            Write-Host ""
+            Write-Host "Body赋值代码片段:" -ForegroundColor Yellow
+            $lines = $content -split "`n"
+            $bodyLineIndex = 0
+            for ($i = 0; $i -lt $lines.Count; $i++) {
+              if ($lines[$i] -match 'Body\s*=') {
+                $bodyLineIndex = $i
+                break
+              }
+            }
+            
+            if ($bodyLineIndex -gt 0) {
+              $start = [Math]::Max(0, $bodyLineIndex - 1)
+              $end = [Math]::Min($lines.Count - 1, $bodyLineIndex + 5)
+              for ($i = $start; $i -le $end; $i++) {
+                Write-Host "  $($i + 1): $($lines[$i])" -ForegroundColor White
+              }
+            }
+          } else {
+            Write-Host "✗ 文件不存在: $testFile" -ForegroundColor Red
+          }
+          
+          Write-Host ""
+        shell: powershell
+      
       - name: 运行邮件发送测试
         env:
           ASPNETCORE_ENVIRONMENT: Production
