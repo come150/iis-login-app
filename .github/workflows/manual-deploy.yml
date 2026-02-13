@@ -39,6 +39,19 @@ jobs:
           Get-ChildItem -Recurse -Filter "*.csproj" | Select-Object FullName
         shell: powershell
       
+      - name: 配置User Secrets
+        run: |
+          Write-Host "配置User Secrets..." -ForegroundColor Yellow
+          
+          $testProject = "Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
+          
+          # 设置Commercial邮件配置
+          dotnet user-secrets set "Email:Commercial:Username" "${{ secrets.BREVO_USERNAME }}" --project $testProject
+          dotnet user-secrets set "Email:Commercial:Password" "${{ secrets.BREVO_PASSWORD }}" --project $testProject
+          
+          Write-Host "✓ User Secrets配置完成" -ForegroundColor Green
+        shell: powershell
+      
       - name: 运行邮件发送测试
         run: |
           Write-Host "========== 开始运行测试 ==========" -ForegroundColor Yellow
