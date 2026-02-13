@@ -1,28 +1,16 @@
-name: Build and Test Quant.Infra.Net
+name: Send Email Test via Quant.Infra.Net
 
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: '选择部署环境'
-        required: true
-        type: choice
-        options:
-          - development
-          - staging
-          - production
-      version:
-        description: '版本号或Git标签（可选）'
+      test_name:
+        description: '测试名称'
         required: false
         type: string
-      skip_tests:
-        description: '跳过测试'
-        required: false
-        type: boolean
-        default: false
+        default: 'MVP_SendCommercial'
 
 jobs:
-  manual-deploy:
+  email-test:
     runs-on: self-hosted
     
     steps:
@@ -41,62 +29,70 @@ jobs:
         with:
           fetch-depth: 1
       
-      - name: 显示部署信息
+      - name: 显示测试信息
         run: |
-          Write-Host "========== 开始部署 ==========" -ForegroundColor Cyan
+          Write-Host "========== 邮件发送测试 ==========" -ForegroundColor Cyan
           Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Yellow
           Write-Host "工作目录: $(Get-Location)" -ForegroundColor Yellow
-        shell: powershell
-      
-      - name: 构建.NET项目
-        run: |
-          Write-Host "开始构建Quant.Infra.Net项目..." -ForegroundColor Yellow
-          
-          Write-Host "当前目录: $(Get-Location)" -ForegroundColor Cyan
-          Write-Host "查找所有.csproj文件:" -ForegroundColor Cyan
-          Get-ChildItem -Recurse -Filter "*.csproj" | Select-Object FullName | Format-Table -AutoSize
-          
-          $projectPath = "Quant.Infra.Net\Quant.Infra.Net\Quant.Infra.Net.csproj"
-          
-          if (Test-Path $projectPath) {
-            Write-Host "✓ 找到项目文件: $projectPath" -ForegroundColor Green
-            
-            $outputPath = "publish"
-            if (Test-Path $outputPath) {
-              Remove-Item $outputPath -Recurse -Force
-            }
-            
-            dotnet publish $projectPath -c Release -o $outputPath
-            Write-Host "✓ 构建完成" -ForegroundColor Green
-          } else {
-            Write-Host "✗ 找不到项目文件: $projectPath" -ForegroundColor Red
-            exit 1
-          }
+          Write-Host ""
+          Write-Host "检查目录结构:" -ForegroundColor Cyan
+          Get-ChildItem -Recurse -Filter "*.csproj" | Select-Object FullName
         shell: powershell
       
       - name: 运行邮件发送测试
         run: |
-          Write-Host "运行邮件发送测试..." -ForegroundColor Yellow
+          Write-Host "========== 开始运行测试 ==========" -ForegroundColor Yellow
+          Write-Host ""
           
           $testProject = "Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
           
+          if (-not (Test-Path $testProject)) {
+            Write-Host "✗ 找不到测试项目: $testProject" -ForegroundColor Red
+            Write-Host "当前目录内容:" -ForegroundColor Yellow
+            Get-ChildItem -Recurse -Directory | Select-Object FullName
+            exit 1
+          }
+          
+          Write-Host "✓ 找到测试项目: $testProject" -ForegroundColor Green
+          Write-Host ""
+          
           # 运行特定的测试方法
+          Write-Host "运行测试: Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" -ForegroundColor Cyan
           dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=normal"
           
-          Write-Host "✓ 邮件已发送" -ForegroundColor Green
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host ""
+            Write-Host "✓ 测试通过！邮件已发送" -ForegroundColor Green
+          } else {
+            Write-Host ""
+            Write-Host "✗ 测试失败" -ForegroundColor Red
+            exit 1
+          }
         shell: powershell
       
-      - name: 部署成功通知
+      - name: 测试成功通知
         if: success()
         run: |
-          Write-Host "========== 部署成功 ==========" -ForegroundColor Green
-          Write-Host "环境: ${{ github.event.inputs.environment }}" -ForegroundColor Cyan
+          Write-Host ""
+          Write-Host "========================================" -ForegroundColor Green
+          Write-Host "  ✓ 邮件发送测试成功！" -ForegroundColor Green
+          Write-Host "========================================" -ForegroundColor Green
+          Write-Host ""
+          Write-Host "收件人:" -ForegroundColor Cyan
+          Write-Host "  - yuanyuancomecome@outlook.com" -ForegroundColor White
+          Write-Host "  - rong.fan1031@gmail.com" -ForegroundColor White
+          Write-Host ""
           Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Cyan
         shell: powershell
       
-      - name: 部署失败通知
+      - name: 测试失败通知
         if: failure()
         run: |
-          Write-Host "========== 部署失败 ==========" -ForegroundColor Red
+          Write-Host ""
+          Write-Host "========================================" -ForegroundColor Red
+          Write-Host "  ✗ 邮件发送测试失败" -ForegroundColor Red
+          Write-Host "========================================" -ForegroundColor Red
+          Write-Host ""
           Write-Host "请检查日志并联系管理员" -ForegroundColor Yellow
+          Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Yellow
         shell: powershell
