@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Quant.Infra.Net.EmailSender")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a5caab758c29f6ed449657960e04662384dd5950")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f68b3f851f001aba13ba0c15e5c5f9451db505c7")]
 [assembly: System.Reflection.AssemblyProductAttribute("Quant.Infra.Net.EmailSender")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Quant.Infra.Net.EmailSender")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
