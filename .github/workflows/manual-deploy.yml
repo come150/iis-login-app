@@ -26,13 +26,14 @@ jobs:
     runs-on: self-hosted
     
     steps:
-      - name: 配置Git以提高网络稳定性
+      - name: 配置Git代理
         run: |
+          git config --global http.proxy http://127.0.0.1:10809
+          git config --global https.proxy http://127.0.0.1:10809
           git config --global http.postBuffer 524288000
           git config --global http.lowSpeedLimit 0
           git config --global http.lowSpeedTime 999999
-          git config --global core.compression 0
-          Write-Host "✓ Git配置已优化" -ForegroundColor Green
+          Write-Host "✓ Git代理已配置" -ForegroundColor Green
         shell: powershell
       
       - name: 检出代码
