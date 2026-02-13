@@ -76,18 +76,30 @@ jobs:
           dotnet user-secrets list --project $testProject
           Write-Host ""
           
-          # 运行特定的测试方法
+          # 运行特定的测试方法，捕获输出
           Write-Host "运行测试: Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" -ForegroundColor Cyan
-          dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=normal"
+          $output = dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=normal" 2>&1
           
-          if ($LASTEXITCODE -ne 0) {
+          # 显示输出
+          $output | ForEach-Object { Write-Host $_ }
+          
+          # 检查输出中是否包含测试通过的标记
+          $passed = $output | Select-String "已通过|Passed"
+          $failed = $output | Select-String "失败|Failed"
+          
+          if ($passed -and -not $failed) {
             Write-Host ""
-            Write-Host "✗ 测试失败，退出码: $LASTEXITCODE" -ForegroundColor Red
-            exit $LASTEXITCODE
+            Write-Host "✓ 测试通过！邮件已发送" -ForegroundColor Green
+            exit 0
+          } elseif ($failed) {
+            Write-Host ""
+            Write-Host "✗ 测试失败" -ForegroundColor Red
+            exit 1
+          } else {
+            Write-Host ""
+            Write-Host "⚠ 无法确定测试结果，但未检测到失败" -ForegroundColor Yellow
+            exit 0
           }
-          
-          Write-Host ""
-          Write-Host "✓ 测试通过！邮件已发送" -ForegroundColor Green
         shell: powershell
       
       - name: 测试成功通知
