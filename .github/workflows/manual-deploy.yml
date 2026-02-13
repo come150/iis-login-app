@@ -80,19 +80,42 @@ jobs:
           
           # 运行特定的测试方法
           Write-Host "运行测试: Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" -ForegroundColor Cyan
-          dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=detailed"
           
-          $exitCode = $LASTEXITCODE
-          Write-Host ""
-          Write-Host "测试退出码: $exitCode" -ForegroundColor Yellow
-          
-          if ($exitCode -eq 0) {
+          try {
+            dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=detailed" 2>&1 | Tee-Object -Variable testOutput
+            
+            $exitCode = $LASTEXITCODE
             Write-Host ""
-            Write-Host "✓ 测试通过！邮件已发送" -ForegroundColor Green
-          } else {
-            Write-Host ""
-            Write-Host "✗ 测试失败，退出码: $exitCode" -ForegroundColor Red
-            exit $exitCode
+            Write-Host "测试退出码: $exitCode" -ForegroundColor Yellow
+            
+            # 检查输出中是否有成功发送的标记
+            $successMarker = $testOutput | Select-String "真实邮件已发送至"
+            if ($successMarker) {
+              Write-Host "✓ 检测到邮件发送成功标记" -ForegroundColor Green
+              $successMarker | ForEach-Object { Write-Host $_.Line -ForegroundColor Green }
+            }
+            
+            # 检查是否有Brevo错误
+            $brevoErrors = $testOutput | Select-String "\[Brevo.*❌"
+            if ($brevoErrors) {
+              Write-Host "✗ 检测到Brevo错误:" -ForegroundColor Red
+              $brevoErrors | ForEach-Object { Write-Host $_.Line -ForegroundColor Red }
+            }
+            
+            if ($exitCode -eq 0) {
+              Write-Host ""
+              Write-Host "✓ 测试通过！邮件已发送" -ForegroundColor Green
+              exit 0
+            } else {
+              Write-Host ""
+              Write-Host "✗ 测试失败，退出码: $exitCode" -ForegroundColor Red
+              exit $exitCode
+            }
+          }
+          catch {
+            Write-Host "✗ 发生异常: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host $_.Exception.StackTrace -ForegroundColor Red
+            exit 1
           }
         shell: powershell
       
