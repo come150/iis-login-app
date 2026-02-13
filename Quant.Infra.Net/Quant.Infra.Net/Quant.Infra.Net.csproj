@@ -44,7 +44,7 @@
     <PackageReference Include="YahooFinanceApi" Version="2.3.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\InterReact\InterReact\InterReact.csproj" />
+    <ProjectReference Include="..\..\InterReact\InterReact\InterReact.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Readme-Quant.Infra.Net..txt">

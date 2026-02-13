@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\InterReact\InterReact\InterReact.csproj" />
+    <ProjectReference Include="..\..\InterReact\InterReact\InterReact.csproj" />
     <ProjectReference Include="..\Quant.Infra.Net\Quant.Infra.Net.csproj" />
   </ItemGroup>
 
