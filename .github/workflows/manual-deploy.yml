@@ -147,6 +147,22 @@ jobs:
             exit 1
           }
           
+          # 先构建 InterReact 项目
+          Write-Host "构建 InterReact 依赖项..." -ForegroundColor Cyan
+          $interReactProject = "InterReact\InterReact\InterReact.csproj"
+          if (Test-Path $interReactProject) {
+            Write-Host "✓ 找到 InterReact 项目: $interReactProject" -ForegroundColor Green
+            dotnet build $interReactProject --configuration Release
+            if ($LASTEXITCODE -ne 0) {
+              Write-Host "✗ InterReact 构建失败" -ForegroundColor Red
+              exit 1
+            }
+            Write-Host "✓ InterReact 构建成功" -ForegroundColor Green
+          } else {
+            Write-Host "⚠ 未找到 InterReact 项目，尝试继续..." -ForegroundColor Yellow
+          }
+          Write-Host ""
+          
           # 运行邮件发送程序
           Write-Host "运行邮件发送程序..." -ForegroundColor Cyan
           Write-Host ""
