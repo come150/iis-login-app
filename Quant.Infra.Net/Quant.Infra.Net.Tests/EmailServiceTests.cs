@@ -90,7 +90,58 @@ namespace Quant.Infra.Net.Tests
 			{
 				To = recipients,
 				Subject = $"🎯 量化交易系统邮件测试 - {DateTime.Now:yyyy-MM-dd HH:mm:ss}",
-				Body = "<h1>测试内容已省略...</h1>", // 保持你原来的 HTML 内容
+				Body = @"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .highlight { background: #fff; padding: 15px; border-left: 4px solid #667eea; margin: 20px 0; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
+        .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <h1>🎯 量化交易系统</h1>
+            <p>邮件发送功能测试</p>
+        </div>
+        <div class='content'>
+            <h2>测试信息</h2>
+            <div class='highlight'>
+                <p><strong>测试时间：</strong>" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + @"</p>
+                <p><strong>测试类型：</strong>Commercial Email Service (Brevo SMTP)</p>
+                <p><strong>发送方式：</strong>GitHub Actions 自动化测试</p>
+            </div>
+            
+            <h3>✅ 测试目的</h3>
+            <p>验证 Quant.Infra.Net 邮件服务在 GitHub Actions 环境中的功能：</p>
+            <ul>
+                <li>✓ 验证 SMTP 配置正确性</li>
+                <li>✓ 验证 User Secrets 配置</li>
+                <li>✓ 验证邮件发送功能</li>
+                <li>✓ 验证 HTML 邮件格式</li>
+            </ul>
+            
+            <h3>📊 系统状态</h3>
+            <p>所有系统组件运行正常，邮件服务已就绪。</p>
+            
+            <div style='text-align: center;'>
+                <a href='https://github.com/come150/iis-login-app' class='button'>查看 GitHub 仓库</a>
+            </div>
+        </div>
+        <div class='footer'>
+            <p>此邮件由 Quant.Infra.Net 自动发送</p>
+            <p>Powered by Brevo SMTP Service</p>
+        </div>
+    </div>
+</body>
+</html>",
 				IsHtml = true
 			};
 
