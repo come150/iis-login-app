@@ -57,8 +57,11 @@ jobs:
         shell: powershell
       
       - name: 运行邮件发送测试
+        env:
+          ASPNETCORE_ENVIRONMENT: Production
         run: |
           Write-Host "========== 开始运行测试 ==========" -ForegroundColor Yellow
+          Write-Host "环境变量 ASPNETCORE_ENVIRONMENT: $env:ASPNETCORE_ENVIRONMENT" -ForegroundColor Cyan
           Write-Host ""
           
           $testProject = "Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
@@ -89,12 +92,23 @@ jobs:
           Write-Host ""
           Write-Host "========== 分析测试结果 ==========" -ForegroundColor Cyan
           
+          # 检查是否有Brevo相关的日志
+          $brevoLogs = $output | Select-String "\[Brevo\]"
+          if ($brevoLogs) {
+            Write-Host "检测到Brevo日志:" -ForegroundColor Cyan
+            $brevoLogs | ForEach-Object { Write-Host "  $_" -ForegroundColor White }
+          } else {
+            Write-Host "⚠ 未检测到任何Brevo日志" -ForegroundColor Yellow
+          }
+          
           # 检查是否有Brevo发送成功的日志
           $brevoSuccess = $output | Select-String "\[Brevo\].*真实邮件已发送至"
           if ($brevoSuccess) {
+            Write-Host ""
             Write-Host "✓ 检测到Brevo邮件发送成功:" -ForegroundColor Green
             $brevoSuccess | ForEach-Object { Write-Host "  $_" -ForegroundColor Green }
           } else {
+            Write-Host ""
             Write-Host "⚠ 未检测到Brevo邮件发送成功的日志" -ForegroundColor Yellow
             Write-Host "  这可能意味着邮件没有真实发送" -ForegroundColor Yellow
           }
