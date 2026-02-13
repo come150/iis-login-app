@@ -28,6 +28,40 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          submodules: recursive
+      
+      - name: 验证项目结构
+        run: |
+          Write-Host "========== 验证项目结构 ==========" -ForegroundColor Cyan
+          Write-Host "当前工作目录: $(Get-Location)" -ForegroundColor Yellow
+          Write-Host ""
+          
+          Write-Host "检查 Quant.Infra.Net 目录:" -ForegroundColor Cyan
+          if (Test-Path "Quant.Infra.Net") {
+            Write-Host "✓ Quant.Infra.Net 目录存在" -ForegroundColor Green
+            Get-ChildItem "Quant.Infra.Net" | Select-Object Name, Mode
+          } else {
+            Write-Host "✗ Quant.Infra.Net 目录不存在" -ForegroundColor Red
+            Write-Host "当前目录内容:" -ForegroundColor Yellow
+            Get-ChildItem | Select-Object Name, Mode
+            exit 1
+          }
+          
+          Write-Host ""
+          Write-Host "检查 EmailSender 项目:" -ForegroundColor Cyan
+          $emailSenderProject = "Quant.Infra.Net\Quant.Infra.Net.EmailSender\Quant.Infra.Net.EmailSender.csproj"
+          if (Test-Path $emailSenderProject) {
+            Write-Host "✓ EmailSender 项目文件存在" -ForegroundColor Green
+          } else {
+            Write-Host "✗ EmailSender 项目文件不存在: $emailSenderProject" -ForegroundColor Red
+            Write-Host ""
+            Write-Host "Quant.Infra.Net 目录内容:" -ForegroundColor Yellow
+            Get-ChildItem "Quant.Infra.Net" -Recurse -Directory | Select-Object FullName
+            exit 1
+          }
+          
+          Write-Host ""
+        shell: powershell
       
       - name: 显示项目信息
         run: |
