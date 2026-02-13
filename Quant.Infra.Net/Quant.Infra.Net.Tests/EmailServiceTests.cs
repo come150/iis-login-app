@@ -165,19 +165,42 @@ namespace Quant.Infra.Net.Tests
 
 			// 验证逻辑
 			Console.WriteLine($"✅ 使用由 DI 容器注入 IHostEnvironment 的 CommercialEmailService");
+			Console.WriteLine($"[TEST] SMTP Server: {settings.SmtpServer}:{settings.Port}");
+			Console.WriteLine($"[TEST] Username: {settings.Username}");
+			Console.WriteLine($"[TEST] Password starts with: {settings.Password?.Substring(0, Math.Min(10, settings.Password.Length))}...");
+			Console.WriteLine($"[TEST] Sender: {settings.SenderEmail}");
+			Console.WriteLine($"[TEST] Recipients: {string.Join(", ", message.To)}");
 
 			if (settings.Password.StartsWith("xkeysib-"))
 			{
+				Console.WriteLine($"[TEST] ❌ 检测到 API Key (xkeysib-)");
 				Assert.Fail("检测到 API Key，但该测试需要 SMTP 凭据 (xsmtpsib-...)");
+			}
+			else if (settings.Password.StartsWith("xsmtpsib-"))
+			{
+				Console.WriteLine($"[TEST] ✓ 检测到正确的 SMTP 密钥 (xsmtpsib-)");
+			}
+			else
+			{
+				Console.WriteLine($"[TEST] ⚠ 未识别的密钥格式");
 			}
 
 			// 2. 调用真实发送
+			Console.WriteLine($"[TEST] 开始调用 SendBulkEmailAsync...");
 			try
 			{
 				var result = await service.SendBulkEmailAsync(message, settings);
+				Console.WriteLine($"[TEST] SendBulkEmailAsync 返回: {result}");
 				Assert.IsTrue(result, "Brevo 真实邮件发送失败");
+				Console.WriteLine($"[TEST] ✓ 测试断言通过");
 			}
 			catch (Exception ex)
+			{
+				Console.WriteLine($"[TEST] ❌ 异常: {ex.Message}");
+				Console.WriteLine($"[TEST] 异常类型: {ex.GetType().Name}");
+				Console.WriteLine($"[TEST] 堆栈跟踪: {ex.StackTrace}");
+				throw;
+			}
 			{
 				Console.WriteLine($"❌ 异常: {ex.Message}");
 				throw;
