@@ -52,7 +52,21 @@ jobs:
         run: |
           Write-Host "开始构建Quant.Infra.Net项目..." -ForegroundColor Yellow
           
+          Write-Host "当前目录: $(Get-Location)" -ForegroundColor Cyan
+          Write-Host "目录内容:" -ForegroundColor Cyan
+          Get-ChildItem | Select-Object Name
+          
           $projectPath = "Quant.Infra.Net\Quant.Infra.Net\Quant.Infra.Net.csproj"
+          
+          if (Test-Path $projectPath) {
+            Write-Host "✓ 找到项目文件: $projectPath" -ForegroundColor Green
+          } else {
+            Write-Host "✗ 找不到项目文件: $projectPath" -ForegroundColor Red
+            Write-Host "尝试查找..." -ForegroundColor Yellow
+            Get-ChildItem -Recurse -Filter "Quant.Infra.Net.csproj" | Select-Object FullName
+            exit 1
+          }
+          
           $outputPath = "publish"
           
           if (Test-Path $outputPath) {
