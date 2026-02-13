@@ -29,7 +29,7 @@ jobs:
         with:
           fetch-depth: 1
       
-      - name: 显示测试信息
+      - name: 显示项目信息
         run: |
           Write-Host "========== 邮件发送测试 ==========" -ForegroundColor Cyan
           Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Yellow
@@ -46,145 +46,54 @@ jobs:
         run: |
           Write-Host "配置User Secrets..." -ForegroundColor Yellow
           
-          $testProject = "Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
+          $emailSenderProject = "Quant.Infra.Net\Quant.Infra.Net.EmailSender\Quant.Infra.Net.EmailSender.csproj"
           
           # 设置Commercial邮件配置
-          dotnet user-secrets set "Email:Commercial:Username" "$env:BREVO_USERNAME" --project $testProject
-          dotnet user-secrets set "Email:Commercial:Password" "$env:BREVO_PASSWORD" --project $testProject
+          dotnet user-secrets set "Email:Commercial:Username" "$env:BREVO_USERNAME" --project $emailSenderProject
+          dotnet user-secrets set "Email:Commercial:Password" "$env:BREVO_PASSWORD" --project $emailSenderProject
           
           Write-Host "✓ User Secrets配置完成" -ForegroundColor Green
           Write-Host "Username: $env:BREVO_USERNAME" -ForegroundColor Cyan
         shell: powershell
       
-      - name: 验证测试代码版本
-        run: |
-          Write-Host "========== 验证测试代码 ==========" -ForegroundColor Cyan
-          Write-Host ""
-          
-          $testFile = "Quant.Infra.Net\Quant.Infra.Net.Tests\EmailServiceTests.cs"
-          
-          Write-Host "检查测试文件是否存在:" -ForegroundColor Yellow
-          if (Test-Path $testFile) {
-            Write-Host "✓ 文件存在: $testFile" -ForegroundColor Green
-            
-            Write-Host ""
-            Write-Host "检查MVP_SendCommercial方法的Body内容:" -ForegroundColor Yellow
-            $content = Get-Content $testFile -Raw
-            
-            # 查找Body赋值
-            if ($content -match 'Body\s*=\s*@"') {
-              Write-Host "✓ 检测到完整的HTML Body内容" -ForegroundColor Green
-            } elseif ($content -match 'Body\s*=\s*"<h1>测试内容已省略') {
-              Write-Host "✗ 检测到占位符Body内容（旧版本）" -ForegroundColor Red
-              Write-Host "  这说明GitHub克隆的是旧版本代码！" -ForegroundColor Red
-            } else {
-              Write-Host "⚠ 无法确定Body内容" -ForegroundColor Yellow
-            }
-            
-            # 显示Body相关的几行
-            Write-Host ""
-            Write-Host "Body赋值代码片段:" -ForegroundColor Yellow
-            $lines = $content -split "`n"
-            $bodyLineIndex = 0
-            for ($i = 0; $i -lt $lines.Count; $i++) {
-              if ($lines[$i] -match 'Body\s*=') {
-                $bodyLineIndex = $i
-                break
-              }
-            }
-            
-            if ($bodyLineIndex -gt 0) {
-              $start = [Math]::Max(0, $bodyLineIndex - 1)
-              $end = [Math]::Min($lines.Count - 1, $bodyLineIndex + 5)
-              for ($i = $start; $i -le $end; $i++) {
-                Write-Host "  $($i + 1): $($lines[$i])" -ForegroundColor White
-              }
-            }
-          } else {
-            Write-Host "✗ 文件不存在: $testFile" -ForegroundColor Red
-          }
-          
-          Write-Host ""
-        shell: powershell
-      
-      - name: 运行邮件发送测试
+      - name: 运行邮件发送程序
         env:
           ASPNETCORE_ENVIRONMENT: Production
         run: |
-          Write-Host "========== 开始运行测试 ==========" -ForegroundColor Yellow
+          Write-Host "========== 开始运行邮件发送程序 ==========" -ForegroundColor Yellow
           Write-Host "环境变量 ASPNETCORE_ENVIRONMENT: $env:ASPNETCORE_ENVIRONMENT" -ForegroundColor Cyan
           Write-Host ""
           
-          $testProject = "Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
+          $emailSenderProject = "Quant.Infra.Net\Quant.Infra.Net.EmailSender\Quant.Infra.Net.EmailSender.csproj"
           
-          if (-not (Test-Path $testProject)) {
-            Write-Host "✗ 找不到测试项目: $testProject" -ForegroundColor Red
+          if (-not (Test-Path $emailSenderProject)) {
+            Write-Host "✗ 找不到邮件发送项目: $emailSenderProject" -ForegroundColor Red
             exit 1
           }
           
-          Write-Host "✓ 找到测试项目: $testProject" -ForegroundColor Green
+          Write-Host "✓ 找到邮件发送项目: $emailSenderProject" -ForegroundColor Green
           Write-Host ""
           
           # 验证User Secrets是否配置成功
           Write-Host "验证User Secrets配置:" -ForegroundColor Cyan
-          dotnet user-secrets list --project $testProject
+          dotnet user-secrets list --project $emailSenderProject
           Write-Host ""
           
-          # 运行特定的测试方法，捕获输出
-          Write-Host "运行测试: Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" -ForegroundColor Cyan
-          Write-Host "注意：查找 [Brevo] 开头的日志以确认邮件是否真实发送" -ForegroundColor Yellow
+          # 运行邮件发送程序
+          Write-Host "运行邮件发送程序..." -ForegroundColor Cyan
           Write-Host ""
           
-          $output = dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=detailed" 2>&1
+          dotnet run --project $emailSenderProject
           
-          # 显示输出
-          $output | ForEach-Object { Write-Host $_ }
+          $exitCode = $LASTEXITCODE
           
           Write-Host ""
-          Write-Host "========== 分析测试结果 ==========" -ForegroundColor Cyan
-          
-          # 检查是否有Brevo相关的日志
-          $brevoLogs = $output | Select-String "\[Brevo\]"
-          if ($brevoLogs) {
-            Write-Host "检测到Brevo日志:" -ForegroundColor Cyan
-            $brevoLogs | ForEach-Object { Write-Host "  $_" -ForegroundColor White }
-          } else {
-            Write-Host "⚠ 未检测到任何Brevo日志" -ForegroundColor Yellow
-          }
-          
-          # 检查是否有Brevo发送成功的日志
-          $brevoSuccess = $output | Select-String "\[Brevo\].*真实邮件已发送至"
-          if ($brevoSuccess) {
-            Write-Host ""
-            Write-Host "✓ 检测到Brevo邮件发送成功:" -ForegroundColor Green
-            $brevoSuccess | ForEach-Object { Write-Host "  $_" -ForegroundColor Green }
-          } else {
-            Write-Host ""
-            Write-Host "⚠ 未检测到Brevo邮件发送成功的日志" -ForegroundColor Yellow
-            Write-Host "  这可能意味着邮件没有真实发送" -ForegroundColor Yellow
-          }
-          
-          # 检查输出中是否包含测试通过的标记
-          $passed = $output | Select-String "已通过|Passed"
-          $failed = $output | Select-String "失败|Failed"
-          
-          if ($passed -and -not $failed) {
-            Write-Host ""
-            Write-Host "✓ 测试通过！" -ForegroundColor Green
-            if ($brevoSuccess) {
-              Write-Host "✓ 邮件已发送" -ForegroundColor Green
-            } else {
-              Write-Host "⚠ 测试通过但未确认邮件发送" -ForegroundColor Yellow
-            }
+          if ($exitCode -eq 0) {
+            Write-Host "✓ 邮件发送成功！" -ForegroundColor Green
             exit 0
-          } elseif ($failed) {
-            Write-Host ""
-            Write-Host "✗ 测试失败" -ForegroundColor Red
+          } else {
+            Write-Host "✗ 邮件发送失败，退出代码: $exitCode" -ForegroundColor Red
             exit 1
-          } else {
-            Write-Host ""
-            Write-Host "⚠ 无法确定测试结果，但未检测到失败" -ForegroundColor Yellow
-            exit 0
           }
         shell: powershell
       
