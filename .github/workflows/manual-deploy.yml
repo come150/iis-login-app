@@ -40,16 +40,20 @@ jobs:
         shell: powershell
       
       - name: 配置User Secrets
+        env:
+          BREVO_USERNAME: ${{ secrets.BREVO_USERNAME }}
+          BREVO_PASSWORD: ${{ secrets.BREVO_PASSWORD }}
         run: |
           Write-Host "配置User Secrets..." -ForegroundColor Yellow
           
           $testProject = "Quant.Infra.Net\Quant.Infra.Net.Tests\Quant.Infra.Net.Tests.csproj"
           
           # 设置Commercial邮件配置
-          dotnet user-secrets set "Email:Commercial:Username" "${{ secrets.BREVO_USERNAME }}" --project $testProject
-          dotnet user-secrets set "Email:Commercial:Password" "${{ secrets.BREVO_PASSWORD }}" --project $testProject
+          dotnet user-secrets set "Email:Commercial:Username" "$env:BREVO_USERNAME" --project $testProject
+          dotnet user-secrets set "Email:Commercial:Password" "$env:BREVO_PASSWORD" --project $testProject
           
           Write-Host "✓ User Secrets配置完成" -ForegroundColor Green
+          Write-Host "Username: $env:BREVO_USERNAME" -ForegroundColor Cyan
         shell: powershell
       
       - name: 运行邮件发送测试
