@@ -78,10 +78,26 @@ jobs:
           
           # 运行特定的测试方法，捕获输出
           Write-Host "运行测试: Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" -ForegroundColor Cyan
-          $output = dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=normal" 2>&1
+          Write-Host "注意：查找 [Brevo] 开头的日志以确认邮件是否真实发送" -ForegroundColor Yellow
+          Write-Host ""
+          
+          $output = dotnet test $testProject --filter "FullyQualifiedName=Quant.Infra.Net.Tests.EmailIntegrationTests.MVP_SendCommercial" --logger "console;verbosity=detailed" 2>&1
           
           # 显示输出
           $output | ForEach-Object { Write-Host $_ }
+          
+          Write-Host ""
+          Write-Host "========== 分析测试结果 ==========" -ForegroundColor Cyan
+          
+          # 检查是否有Brevo发送成功的日志
+          $brevoSuccess = $output | Select-String "\[Brevo\].*真实邮件已发送至"
+          if ($brevoSuccess) {
+            Write-Host "✓ 检测到Brevo邮件发送成功:" -ForegroundColor Green
+            $brevoSuccess | ForEach-Object { Write-Host "  $_" -ForegroundColor Green }
+          } else {
+            Write-Host "⚠ 未检测到Brevo邮件发送成功的日志" -ForegroundColor Yellow
+            Write-Host "  这可能意味着邮件没有真实发送" -ForegroundColor Yellow
+          }
           
           # 检查输出中是否包含测试通过的标记
           $passed = $output | Select-String "已通过|Passed"
@@ -89,7 +105,12 @@ jobs:
           
           if ($passed -and -not $failed) {
             Write-Host ""
-            Write-Host "✓ 测试通过！邮件已发送" -ForegroundColor Green
+            Write-Host "✓ 测试通过！" -ForegroundColor Green
+            if ($brevoSuccess) {
+              Write-Host "✓ 邮件已发送" -ForegroundColor Green
+            } else {
+              Write-Host "⚠ 测试通过但未确认邮件发送" -ForegroundColor Yellow
+            }
             exit 0
           } elseif ($failed) {
             Write-Host ""
