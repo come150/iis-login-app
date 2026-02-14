@@ -1,0 +1,240 @@
+name: oooooo  Send Email Test via Quant.Infra.Net
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_name:
+        description: '测试名称'
+        required: false
+        type: string
+        default: 'MVP_SendCommercial'
+
+jobs:
+  email-test:
+    runs-on: self-hosted
+    
+    steps:
+      - name: 配置Git代理
+        run: |
+          git config --global http.proxy http://127.0.0.1:10809
+          git config --global https.proxy http://127.0.0.1:10809
+          git config --global http.postBuffer 524288000
+          git config --global http.lowSpeedLimit 0
+          git config --global http.lowSpeedTime 999999
+          Write-Host "✓ Git代理已配置" -ForegroundColor Green
+        shell: powershell
+      
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      
+      - name: 验证项目结构
+        run: |
+          Write-Host "========== 验证项目结构 ==========" -ForegroundColor Cyan
+          Write-Host "当前工作目录: $(Get-Location)" -ForegroundColor Yellow
+          Write-Host ""
+          
+          Write-Host "检查 Quant.Infra.Net 目录:" -ForegroundColor Cyan
+          if (Test-Path "Quant.Infra.Net") {
+            Write-Host "✓ Quant.Infra.Net 目录存在" -ForegroundColor Green
+            Get-ChildItem "Quant.Infra.Net" | Select-Object Name, Mode
+          } else {
+            Write-Host "✗ Quant.Infra.Net 目录不存在" -ForegroundColor Red
+            Write-Host "当前目录内容:" -ForegroundColor Yellow
+            Get-ChildItem | Select-Object Name, Mode
+            exit 1
+          }
+          
+          Write-Host ""
+          Write-Host "检查 EmailSender 项目:" -ForegroundColor Cyan
+          $emailSenderProject = "Quant.Infra.Net\Quant.Infra.Net.EmailSender\Quant.Infra.Net.EmailSender.csproj"
+          if (Test-Path $emailSenderProject) {
+            Write-Host "✓ EmailSender 项目文件存在" -ForegroundColor Green
+          } else {
+            Write-Host "✗ EmailSender 项目文件不存在: $emailSenderProject" -ForegroundColor Red
+            Write-Host ""
+            Write-Host "Quant.Infra.Net 目录内容:" -ForegroundColor Yellow
+            Get-ChildItem "Quant.Infra.Net" -Recurse -Directory | Select-Object FullName
+            exit 1
+          }
+          
+          Write-Host ""
+        shell: powershell
+      
+      - name: 显示项目信息
+        run: |
+          Write-Host "========== 邮件发送测试 ==========" -ForegroundColor Cyan
+          Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Yellow
+          Write-Host "工作目录: $(Get-Location)" -ForegroundColor Yellow
+          Write-Host ""
+          Write-Host "检查目录结构:" -ForegroundColor Cyan
+          Get-ChildItem -Recurse -Filter "*.csproj" | Select-Object FullName
+        shell: powershell
+      
+      - name: 配置User Secrets
+        env:
+          BREVO_USERNAME: ${{ secrets.BREVO_USERNAME }}
+          BREVO_PASSWORD: ${{ secrets.BREVO_PASSWORD }}
+        run: |
+          Write-Host "配置User Secrets..." -ForegroundColor Yellow
+          
+          $emailSenderProject = "Quant.Infra.Net\Quant.Infra.Net.EmailSender\Quant.Infra.Net.EmailSender.csproj"
+          
+          # 检查项目文件是否存在
+          if (-not (Test-Path $emailSenderProject)) {
+            Write-Host "✗ 找不到项目文件: $emailSenderProject" -ForegroundColor Red
+            Write-Host "当前目录: $(Get-Location)" -ForegroundColor Yellow
+            Write-Host "目录内容:" -ForegroundColor Yellow
+            Get-ChildItem -Recurse -Filter "*.csproj" | Select-Object FullName
+            exit 1
+          }
+          
+          Write-Host "✓ 找到项目文件: $emailSenderProject" -ForegroundColor Green
+          
+          # 检查环境变量
+          if ([string]::IsNullOrEmpty($env:BREVO_USERNAME)) {
+            Write-Host "✗ BREVO_USERNAME 环境变量为空" -ForegroundColor Red
+            exit 1
+          }
+          
+          if ([string]::IsNullOrEmpty($env:BREVO_PASSWORD)) {
+            Write-Host "✗ BREVO_PASSWORD 环境变量为空" -ForegroundColor Red
+            exit 1
+          }
+          
+          Write-Host "✓ 环境变量已设置" -ForegroundColor Green
+          
+          # 设置Commercial邮件配置
+          Write-Host "设置 Username..." -ForegroundColor Cyan
+          dotnet user-secrets set "Email:Commercial:Username" "$env:BREVO_USERNAME" --project $emailSenderProject
+          
+          Write-Host "设置 Password..." -ForegroundColor Cyan
+          dotnet user-secrets set "Email:Commercial:Password" "$env:BREVO_PASSWORD" --project $emailSenderProject
+          
+          Write-Host "✓ User Secrets配置完成" -ForegroundColor Green
+          Write-Host "Username: $env:BREVO_USERNAME" -ForegroundColor Cyan
+        shell: powershell
+      
+      - name: 运行邮件发送程序
+        env:
+          ASPNETCORE_ENVIRONMENT: Production
+        run: |
+          Write-Host "========== 开始运行邮件发送程序 ==========" -ForegroundColor Yellow
+          Write-Host "环境变量 ASPNETCORE_ENVIRONMENT: $env:ASPNETCORE_ENVIRONMENT" -ForegroundColor Cyan
+          Write-Host ""
+          
+          $emailSenderProject = "Quant.Infra.Net\Quant.Infra.Net.EmailSender\Quant.Infra.Net.EmailSender.csproj"
+          
+          if (-not (Test-Path $emailSenderProject)) {
+            Write-Host "✗ 找不到邮件发送项目: $emailSenderProject" -ForegroundColor Red
+            exit 1
+          }
+          
+          Write-Host "✓ 找到邮件发送项目: $emailSenderProject" -ForegroundColor Green
+          Write-Host ""
+          
+          # 验证User Secrets是否配置成功
+          Write-Host "验证User Secrets配置:" -ForegroundColor Cyan
+          $secrets = dotnet user-secrets list --project $emailSenderProject
+          Write-Host $secrets
+          Write-Host ""
+          
+          # 检查是否有配置
+          if ($secrets -match "No secrets configured") {
+            Write-Host "✗ User Secrets 未配置" -ForegroundColor Red
+            exit 1
+          }
+          
+          # 先构建整个解决方案
+          Write-Host "构建整个解决方案..." -ForegroundColor Cyan
+          $solutionFile = "Quant.Infra.Net\Quant.Infra.Net.sln"
+          if (Test-Path $solutionFile) {
+            Write-Host "✓ 找到解决方案文件: $solutionFile" -ForegroundColor Green
+            dotnet build $solutionFile --configuration Release
+            if ($LASTEXITCODE -ne 0) {
+              Write-Host "✗ 解决方案构建失败" -ForegroundColor Red
+              exit 1
+            }
+            Write-Host "✓ 解决方案构建成功" -ForegroundColor Green
+          } else {
+            Write-Host "⚠ 未找到解决方案文件，尝试单独构建项目..." -ForegroundColor Yellow
+            
+            # 先构建 InterReact 项目
+            $interReactProject = "InterReact\InterReact\InterReact.csproj"
+            if (Test-Path $interReactProject) {
+              Write-Host "✓ 找到 InterReact 项目: $interReactProject" -ForegroundColor Green
+              dotnet build $interReactProject --configuration Release
+              if ($LASTEXITCODE -ne 0) {
+                Write-Host "✗ InterReact 构建失败" -ForegroundColor Red
+                exit 1
+              }
+              Write-Host "✓ InterReact 构建成功" -ForegroundColor Green
+            } else {
+              Write-Host "⚠ 未找到 InterReact 项目" -ForegroundColor Yellow
+            }
+            
+            # 然后构建 Quant.Infra.Net 项目
+            $quantProject = "Quant.Infra.Net\Quant.Infra.Net\Quant.Infra.Net.csproj"
+            if (Test-Path $quantProject) {
+              Write-Host "✓ 找到 Quant.Infra.Net 项目: $quantProject" -ForegroundColor Green
+              dotnet build $quantProject --configuration Release
+              if ($LASTEXITCODE -ne 0) {
+                Write-Host "✗ Quant.Infra.Net 构建失败" -ForegroundColor Red
+                exit 1
+              }
+              Write-Host "✓ Quant.Infra.Net 构建成功" -ForegroundColor Green
+            }
+          }
+          Write-Host ""
+          
+          # 运行邮件发送程序
+          Write-Host "运行邮件发送程序..." -ForegroundColor Cyan
+          Write-Host ""
+          
+          try {
+            dotnet run --project $emailSenderProject
+            $exitCode = $LASTEXITCODE
+            
+            Write-Host ""
+            if ($exitCode -eq 0) {
+              Write-Host "✓ 邮件发送成功！" -ForegroundColor Green
+              exit 0
+            } else {
+              Write-Host "✗ 邮件发送失败，退出代码: $exitCode" -ForegroundColor Red
+              exit 1
+            }
+          } catch {
+            Write-Host "✗ 运行时发生异常: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "异常详情: $_" -ForegroundColor Red
+            exit 1
+          }
+        shell: powershell
+      
+      - name: 测试成功通知
+        if: success()
+        run: |
+          Write-Host ""
+          Write-Host "========================================" -ForegroundColor Green
+          Write-Host "  ✓ 邮件发送测试成功！" -ForegroundColor Green
+          Write-Host "========================================" -ForegroundColor Green
+          Write-Host ""
+          Write-Host "收件人:" -ForegroundColor Cyan
+          Write-Host "  - yuanyuancomecome@outlook.com" -ForegroundColor White
+          Write-Host "  - rong.fan1031@gmail.com" -ForegroundColor White
+          Write-Host ""
+          Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Cyan
+        shell: powershell
+      
+      - name: 测试失败通知
+        if: failure()
+        run: |
+          Write-Host ""
+          Write-Host "========================================" -ForegroundColor Red
+          Write-Host "  ✗ 邮件发送测试失败" -ForegroundColor Red
+          Write-Host "========================================" -ForegroundColor Red
+          Write-Host ""
+          Write-Host "请检查日志并联系管理员" -ForegroundColor Yellow
+          Write-Host "时间: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')" -ForegroundColor Yellow
+        shell: powershell
