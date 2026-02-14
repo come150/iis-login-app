@@ -201,10 +201,6 @@ namespace Quant.Infra.Net.Tests
 				Console.WriteLine($"[TEST] 堆栈跟踪: {ex.StackTrace}");
 				throw;
 			}
-			{
-				Console.WriteLine($"❌ 异常: {ex.Message}");
-				throw;
-			}
 		}
 	}
 }
